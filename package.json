@@ -1,0 +1,21 @@
+{
+  "name": "crypto-trading-bot",
+  "version": "1.0.0",
+  "description": "AI-powered cryptocurrency trading bot with Claude decision engine",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "dashboard": "node src/dashboard.js",
+    "test": "node src/test.js"
+  },
+  "keywords": ["crypto", "trading", "ai", "claude"],
+  "author": "Kyo",
+  "license": "MIT",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.32.1",
+    "node-cron": "^3.0.3",
+    "ccxt": "^4.2.0"
+  }
+}
