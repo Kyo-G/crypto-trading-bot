@@ -7,6 +7,7 @@ import PaperAccount from './paper-account.js';
 import ClaudeDecisionEngine from './claude-engine.js';
 import RiskManager from './risk-manager.js';
 import Logger from './logger.js';
+import RotationStrategy from './rotation-strategy.js';
 import { config } from '../config/config.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -25,11 +26,12 @@ function pushToGitHub() {
 
 class TradingBot {
   constructor() {
-    this.market = new BinanceClient();
-    this.paper = new PaperAccount();
-    this.claude = new ClaudeDecisionEngine();
-    this.risk = new RiskManager();
-    this.logger = new Logger();
+    this.market   = new BinanceClient();
+    this.paper    = new PaperAccount();
+    this.claude   = new ClaudeDecisionEngine();
+    this.risk     = new RiskManager();
+    this.logger   = new Logger();
+    this.rotation = new RotationStrategy();
     this.lastPrice = null;
     this.isRunning = false;
   }
@@ -130,9 +132,13 @@ class TradingBot {
       }
 
       // 有持仓时不跳过（随时监控止盈止损）
+      // 轮换策略每次都跑（不依赖BTC价格变化）
+      await this.rotation.run();
+
       if (priceChange < config.trading.priceChangeThreshold && positions.length === 0) {
-        console.log(`✋ 空仓且价格变化不足${config.trading.priceChangeThreshold}%，跳过分析\n`);
+        console.log(`✋ 空仓且BTC变化不足${config.trading.priceChangeThreshold}%，跳过Claude分析\n`);
         this.lastPrice = currentPrice;
+        pushToGitHub();
         return;
       }
 

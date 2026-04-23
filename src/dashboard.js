@@ -45,48 +45,92 @@ function getTodayDecisions() {
   return readJSON(file) || [];
 }
 
+function getRotationData() {
+  const accountFile = path.join(__dirname, '..', 'data', 'rotation-account.json');
+  const stateFile   = path.join(__dirname, '..', 'data', 'rotation-state.json');
+  return {
+    account: readJSON(accountFile),
+    state:   readJSON(stateFile),
+  };
+}
+
+async function fetchMultiPrices() {
+  const coins = ['BTC', 'ETH', 'BNB', 'SOL'];
+  const symbols = coins.map(c => `"${c}USDT"`).join(',');
+  return new Promise(resolve => {
+    https.get(`https://api.binance.com/api/v3/ticker/price?symbols=[${symbols}]`, res => {
+      let data = '';
+      res.on('data', c => data += c);
+      res.on('end', () => {
+        try {
+          const prices = {};
+          JSON.parse(data).forEach(item => {
+            prices[item.symbol.replace('USDT', '')] = parseFloat(item.price);
+          });
+          resolve(prices);
+        } catch { resolve({}); }
+      });
+    }).on('error', () => resolve({}));
+  });
+}
+
 async function buildAPIData() {
-  const account = getAccountData();
+  const account   = getAccountData();
   const decisions = getTodayDecisions();
-  const currentPrice = await fetchBTCPrice();
+  const { account: rotAccount, state: rotState } = getRotationData();
+  const [currentPrice, spotPrices] = await Promise.all([fetchBTCPrice(), fetchMultiPrices()]);
 
-  if (!account) return { error: '读取账户数据失败' };
-
-  // 计算持仓实时盈亏
+  // --- Claude策略 ---
   const positions = (account.positions || []).map(p => {
     const pnl = p.side === 'long'
       ? (currentPrice - p.entryPrice) * p.contracts
       : (p.entryPrice - currentPrice) * p.contracts;
     return { ...p, unrealizedPnl: pnl, percentage: (pnl / p.margin) * 100 };
   });
+  const unrealized  = positions.reduce((s, p) => s + p.unrealizedPnl, 0);
+  const equity      = account.balance.USDT + account.balance.used + unrealized;
+  const totalReturn = (equity - account.initialBalance) / account.initialBalance * 100;
+  const history     = account.tradeHistory || [];
+  const wins        = history.filter(t => t.pnl > 0).length;
+  const totalPnl    = history.reduce((s, t) => s + t.pnl, 0);
 
-  const unrealized = positions.reduce((s, p) => s + p.unrealizedPnl, 0);
-  const equity = account.balance.USDT + account.balance.used + unrealized;
-  const totalReturn = ((equity - account.initialBalance) / account.initialBalance * 100);
-  const history = account.tradeHistory || [];
-  const wins = history.filter(t => t.pnl > 0).length;
-  const totalPnl = history.reduce((s, t) => s + t.pnl, 0);
+  // --- 轮换策略 ---
+  let rotation = null;
+  if (rotAccount?.initialized) {
+    const curCoin   = rotAccount.currentCoin;
+    const curPrice  = spotPrices[curCoin] || 0;
+    const rotValue  = rotAccount.coinAmount * curPrice;
+    const rotReturn = (rotValue - rotAccount.initialUSDT) / rotAccount.initialUSDT * 100;
+    rotation = {
+      currentCoin:  curCoin,
+      coinAmount:   rotAccount.coinAmount,
+      currentValue: rotValue,
+      totalReturn:  rotReturn,
+      initialUSDT:  rotAccount.initialUSDT,
+      tradeHistory: (rotAccount.tradeHistory || []).slice(-20).reverse(),
+      totalTrades:  (rotAccount.tradeHistory || []).length,
+      prices:       spotPrices,
+    };
+  }
 
   return {
     currentPrice,
     account: {
-      equity,
-      available: account.balance.USDT,
+      equity, available: account.balance.USDT,
       usedMargin: account.balance.used,
-      unrealizedPnl: unrealized,
-      totalReturn,
+      unrealizedPnl: unrealized, totalReturn,
       initialBalance: account.initialBalance,
     },
     positions,
-    history: history.slice(-20).reverse(), // 最近20笔
-    decisions: decisions.slice(-10).reverse(), // 最近10次决策
+    history:   history.slice(-20).reverse(),
+    decisions: decisions.slice(-10).reverse(),
     stats: {
-      totalTrades: history.length,
-      wins,
+      totalTrades: history.length, wins,
       losses: history.length - wins,
       winRate: history.length > 0 ? (wins / history.length * 100).toFixed(1) : '0.0',
       totalPnl,
     },
+    rotation,
     updatedAt: new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' }),
   };
 }
