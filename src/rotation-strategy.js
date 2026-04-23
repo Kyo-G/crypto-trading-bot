@@ -148,6 +148,12 @@ class RotationStrategy {
 
     if (!this.account.initialized) { this.initialize(prices); return { prices }; }
 
+    // 补全历史账户缺失的入场信息
+    if (!this.account.entryPrice) {
+      this.account.entryPrice = prices[this.account.currentCoin];
+      this.account.entryTime  = this.account.entryTime || new Date().toISOString();
+    }
+
     const { bestCoin, bestProfit } = this.scout(prices);
     const value = this.currentValueUSDT(prices);
     const ret = ((value - this.account.initialUSDT) / this.account.initialUSDT * 100).toFixed(2);
