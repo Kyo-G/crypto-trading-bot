@@ -1,0 +1,9 @@
+{
+  "balance": {
+    "USDT": 10000,
+    "used": 0
+  },
+  "positions": [],
+  "tradeHistory": [],
+  "initialBalance": 10000
+}
