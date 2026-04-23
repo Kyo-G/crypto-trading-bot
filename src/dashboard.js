@@ -56,22 +56,21 @@ function getRotationData() {
 
 async function fetchMultiPrices() {
   const coins = ['BTC', 'ETH', 'BNB', 'SOL'];
-  const symbols = coins.map(c => `"${c}USDT"`).join(',');
-  return new Promise(resolve => {
-    https.get(`https://api.binance.com/api/v3/ticker/price?symbols=[${symbols}]`, res => {
-      let data = '';
-      res.on('data', c => data += c);
-      res.on('end', () => {
-        try {
-          const prices = {};
-          JSON.parse(data).forEach(item => {
-            prices[item.symbol.replace('USDT', '')] = parseFloat(item.price);
-          });
-          resolve(prices);
-        } catch { resolve({}); }
-      });
-    }).on('error', () => resolve({}));
-  });
+  const results = await Promise.all(coins.map(coin =>
+    new Promise(resolve => {
+      https.get(`https://fapi.binance.com/fapi/v1/ticker/price?symbol=${coin}USDT`, res => {
+        let data = '';
+        res.on('data', c => data += c);
+        res.on('end', () => {
+          try { resolve({ coin, price: parseFloat(JSON.parse(data).price) }); }
+          catch { resolve(null); }
+        });
+      }).on('error', () => resolve(null));
+    })
+  ));
+  const prices = {};
+  results.forEach(r => { if (r) prices[r.coin] = r.price; });
+  return prices;
 }
 
 async function buildAPIData() {

@@ -63,6 +63,8 @@ class RotationStrategy {
     const price = prices.BTC;
     this.account.coinAmount = (this.account.initialUSDT * (1 - FEE)) / price;
     this.account.currentCoin = 'BTC';
+    this.account.entryPrice = price;
+    this.account.entryTime = new Date().toISOString();
     this.account.initialized = true;
 
     // 记录所有币对的初始比价
@@ -126,6 +128,8 @@ class RotationStrategy {
 
     this.account.coinAmount  = newAmount;
     this.account.currentCoin = toCoin;
+    this.account.entryPrice  = toPrice;
+    this.account.entryTime   = new Date().toISOString();
     this.state.currentCoin   = toCoin;
     // 交易后重置比价基准
     this.state.ratios[`${fromCoin}-${toCoin}`] = fromPrice / toPrice;
