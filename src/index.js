@@ -1,5 +1,6 @@
 import cron from 'node-cron';
 import { execSync } from 'child_process';
+import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import BinanceClient from './binance-client.js';
@@ -8,10 +9,23 @@ import ClaudeDecisionEngine from './claude-engine.js';
 import RiskManager from './risk-manager.js';
 import Logger from './logger.js';
 import RotationStrategy from './rotation-strategy.js';
+import FundingStrategy from './funding-strategy.js';
 import { config } from '../config/config.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
+
+function saveEquitySnapshot(aiEquity, rotEquity, fundEquity) {
+  try {
+    const file = path.join(ROOT, 'data', 'equity-log.json');
+    let log = [];
+    try { log = JSON.parse(fs.readFileSync(file, 'utf-8')); } catch {}
+    log.push({ timestamp: new Date().toISOString(), ai: aiEquity, rotation: rotEquity, funding: fundEquity });
+    // 只保留最近7天（每5分钟一条 ≈ 2016条）
+    if (log.length > 2016) log = log.slice(-2016);
+    fs.writeFileSync(file, JSON.stringify(log));
+  } catch {}
+}
 
 function pushToGitHub() {
   try {
@@ -32,6 +46,7 @@ class TradingBot {
     this.risk     = new RiskManager();
     this.logger   = new Logger();
     this.rotation = new RotationStrategy();
+    this.funding  = new FundingStrategy();
     this.lastPrice = null;
     this.isRunning = false;
   }
@@ -131,9 +146,27 @@ class TradingBot {
         });
       }
 
-      // 有持仓时不跳过（随时监控止盈止损）
-      // 轮换策略每次都跑（不依赖BTC价格变化）
-      await this.rotation.run();
+      // 轮换策略和资金费率策略每次都跑
+      const rotResult = await this.rotation.run();
+      await this.funding.run();
+
+      // 每次都记录三策略收益快照（用于折线图）
+      const paperBalance = this.paper.getBalance();
+      const paperPositions = this.paper.getPositions(currentPrice);
+      const unrealizedPnl = paperPositions.reduce((s, p) => s + p.unrealizedPnl, 0);
+      const aiEquity = paperBalance.USDT + paperBalance.used + unrealizedPnl;
+      const rotAcc = this.rotation.account;
+      const rotPrices = rotResult?.prices || {};
+      const rotCoinPrice = rotPrices[rotAcc?.currentCoin] || currentPrice;
+      const rotEquity = rotAcc?.initialized
+        ? (rotAcc.coinAmount || 0) * rotCoinPrice
+        : 10000;
+      const fundEquity = this.funding.account?.currentUSDT || 10000;
+      saveEquitySnapshot(
+        parseFloat(aiEquity.toFixed(2)),
+        parseFloat(rotEquity.toFixed(2)),
+        parseFloat(fundEquity.toFixed(2))
+      );
 
       if (priceChange < config.trading.priceChangeThreshold && positions.length === 0) {
         console.log(`✋ 空仓且BTC变化不足${config.trading.priceChangeThreshold}%，跳过Claude分析\n`);

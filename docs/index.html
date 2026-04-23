@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>模拟交易仪表盘</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body { background: #0d1117; color: #e6edf3; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 14px; }
@@ -78,9 +79,10 @@
     <h1>🤖 <span>模拟交易</span> 仪表盘</h1>
     <div class="price-badge" id="btc-price">--</div>
     <select id="strategy-select" onchange="switchView(this.value)">
-      <option value="compare">📊 两策略对比</option>
+      <option value="compare">📊 三策略对比</option>
       <option value="ai">🧠 AI策略详情</option>
       <option value="rotation">🔄 轮换策略详情</option>
+      <option value="funding">💰 资金费率策略详情</option>
     </select>
     <div class="refresh-note"><span class="dot"></span>30秒刷新</div>
   </div>
@@ -110,14 +112,31 @@
           <div class="card-value" id="c-rot-trades">--</div>
           <div class="card-sub" id="c-rot-coin">--</div>
         </div>
+        <div class="card">
+          <div class="card-label">💰 资金费率 · 总资产</div>
+          <div class="card-value" id="c-fund-equity">--</div>
+          <div class="card-sub" id="c-fund-return">--</div>
+        </div>
+        <div class="card">
+          <div class="card-label">💰 资金费率 · 累计收益</div>
+          <div class="card-value" id="c-fund-earned">--</div>
+          <div class="card-sub" id="c-fund-status">--</div>
+        </div>
       </div>
       <div class="section">
         <div class="section-title">📈 实时对比</div>
         <div style="padding:18px">
           <table>
-            <thead><tr><th>指标</th><th>🧠 AI策略（Claude驱动）</th><th>🔄 轮换策略（纯数学）</th></tr></thead>
+            <thead><tr><th>指标</th><th>🧠 AI策略</th><th>🔄 轮换策略</th><th>💰 资金费率</th></tr></thead>
             <tbody id="compare-table"></tbody>
           </table>
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-title">📊 三策略收益曲线</div>
+        <div style="padding:18px;position:relative;height:300px">
+          <canvas id="equity-chart"></canvas>
+          <div id="chart-placeholder" class="empty" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)">数据累积中，运行一段时间后自动显示...</div>
         </div>
       </div>
     </div>
@@ -145,6 +164,18 @@
       </div>
       <div class="section"><div class="section-title">💼 当前持仓</div><div id="rot-position"><div class="empty">加载中...</div></div></div>
       <div class="section"><div class="section-title">🔀 换币历史</div><div id="rot-history"><div class="empty">暂无换币记录</div></div></div>
+    </div>
+
+    <!-- 资金费率策略详情视图 -->
+    <div class="view" id="view-funding">
+      <div class="overview">
+        <div class="card"><div class="card-label">总资产</div><div class="card-value" id="fund-equity">--</div><div class="card-sub" id="fund-initial">初始 $10,000</div></div>
+        <div class="card"><div class="card-label">累计收益率</div><div class="card-value" id="fund-return">--</div><div class="card-sub" id="fund-pnl">--</div></div>
+        <div class="card"><div class="card-label">累计资金费收益</div><div class="card-value up" id="fund-earned">--</div><div class="card-sub">每8小时结算</div></div>
+        <div class="card"><div class="card-label">策略状态</div><div class="card-value" id="fund-status">--</div><div class="card-sub">0.01%触发阈值</div></div>
+      </div>
+      <div class="section"><div class="section-title">📌 当前持仓（现货+期货对冲）</div><div id="fund-position"><div class="empty">加载中...</div></div></div>
+      <div class="section"><div class="section-title">📋 操作历史</div><div id="fund-history"><div class="empty">暂无记录</div></div></div>
     </div>
 
   </div>
@@ -184,10 +215,12 @@
 
     async function refresh() {
       const today = new Date().toISOString().split('T')[0];
-      const [account, rotAccount, decisions, prices] = await Promise.all([
+      const [account, rotAccount, fundAccount, decisions, equityLog, prices] = await Promise.all([
         getJSON(`${BASE}/data/paper-account.json`),
         getJSON(`${BASE}/data/rotation-account.json`),
+        getJSON(`${BASE}/data/funding-account.json`),
         getJSON(`${BASE}/logs/decisions-${today}.json`),
+        getJSON(`${BASE}/data/equity-log.json`),
         fetchAllPrices(),
       ]);
 
@@ -343,15 +376,129 @@
         });
       }
 
+      // ── 资金费率策略数据 ──
+      let fundEquity = 10000, fundReturn = 0;
+      if (fundAccount) {
+        fundEquity = fundAccount.currentUSDT || 10000;
+        fundReturn = (fundEquity - fundAccount.initialUSDT) / fundAccount.initialUSDT * 100;
+        const earned = fundAccount.totalFundingEarned || 0;
+        const pos    = fundAccount.position;
+        const status = pos ? `做${pos.openingRate >= 0 ? '空' : '多'}期货对冲中` : '空仓等待机会';
+
+        document.getElementById('c-fund-equity').innerHTML  = `<span class="${cc(fundReturn)}">${fmt(fundEquity)}</span>`;
+        document.getElementById('c-fund-return').innerHTML  = `<span class="${cc(fundReturn)}">${fmtP(fundReturn)}</span>`;
+        document.getElementById('c-fund-earned').innerHTML  = `<span class="${cc(earned)}">+$${Math.abs(earned).toFixed(4)}</span>`;
+        document.getElementById('c-fund-status').textContent = status;
+
+        document.getElementById('fund-equity').innerHTML   = `<span class="${cc(fundReturn)}">${fmt(fundEquity)}</span>`;
+        document.getElementById('fund-return').innerHTML   = `<span class="${cc(fundReturn)}">${fmtP(fundReturn)}</span>`;
+        document.getElementById('fund-pnl').innerHTML      = `盈亏 <span class="${cc(earned)}">+$${Math.abs(earned).toFixed(4)}</span>`;
+        document.getElementById('fund-earned').textContent = `+$${earned.toFixed(4)}`;
+        document.getElementById('fund-status').textContent = status;
+
+        // 当前持仓
+        document.getElementById('fund-position').innerHTML = pos ? `<div class="pos-wrap">
+          <div class="pos-top">
+            <span class="pos-tag tag-hold">Delta中性对冲 · BTC</span>
+            <span class="up" style="font-size:18px;font-weight:700">+$${earned.toFixed(4)} 已收取</span>
+          </div>
+          <div class="pos-grid">
+            <div><label>现货持有</label><span>${pos.spotAmount.toFixed(4)} BTC</span></div>
+            <div><label>期货方向</label><span>${pos.openingRate >= 0 ? '做空（收资金费）' : '做多（收资金费）'}</span></div>
+            <div><label>开仓价格</label><span>${fmt(pos.entryPrice)}</span></div>
+            <div><label>占用资金</label><span>${fmt(pos.margin)}</span></div>
+            <div><label>开仓费率</label><span>${pos.openingRate >= 0 ? '+' : ''}${(pos.openingRate*100).toFixed(4)}%</span></div>
+            <div><label>开仓时间</label><span style="font-size:12px">${ts(pos.openedAt)}</span></div>
+          </div>
+        </div>` : '<div class="empty">当前无持仓，等待资金费率超过 0.01%</div>';
+
+        // 历史记录
+        const hist = (fundAccount.history || []).slice(-30).reverse();
+        document.getElementById('fund-history').innerHTML = hist.length === 0
+          ? '<div class="empty">暂无记录</div>'
+          : `<table><thead><tr><th>时间</th><th>类型</th><th>详情</th><th>金额</th></tr></thead><tbody>`
+          + hist.map(h => {
+              const typeMap = { open:'📥 开仓', close:'📤 平仓', funding:'💵 资金费' };
+              const detail  = h.type === 'funding'
+                ? `费率 ${h.rate >= 0 ? '+' : ''}${(h.rate*100).toFixed(4)}%`
+                : h.type === 'open'
+                ? `BTC @ ${fmt(h.markPrice)}`
+                : `净P&L ≈ ${fmt(h.netPnl||0)}`;
+              const amt     = h.type === 'funding' ? `<span class="${cc(h.earned)}">+$${Math.abs(h.earned||0).toFixed(4)}</span>`
+                            : h.type === 'open'   ? `动用 ${fmt(h.capital)}`
+                            : '-';
+              return `<tr><td>${ts(h.timestamp)}</td><td>${typeMap[h.type]||h.type}</td><td>${detail}</td><td>${amt}</td></tr>`;
+            }).join('')
+          + `</tbody></table>`;
+      }
+
       // 对比表格
       document.getElementById('compare-table').innerHTML = `
-        <tr><td>总资产</td><td class="${cc(aiReturn)}">${fmt(aiEquity)}</td><td class="${cc(rotReturn)}">${fmt(rotEquity)}</td></tr>
-        <tr><td>收益率</td><td class="${cc(aiReturn)}">${fmtP(aiReturn)}</td><td class="${cc(rotReturn)}">${fmtP(rotReturn)}</td></tr>
-        <tr><td>需要API费用</td><td style="color:#f0b429">是（每天约¥1-2）</td><td style="color:#3fb950">否（完全免费）</td></tr>
-        <tr><td>交易方向</td><td>多空均可（合约）</td><td>只做多（持币轮换）</td></tr>
-        <tr><td>使用杠杆</td><td style="color:#f0b429">5x</td><td style="color:#3fb950">无杠杆</td></tr>
-        <tr><td>初始资金</td><td>${fmt(account?.initialBalance||10000)}</td><td>${fmt(rotAccount?.initialUSDT||10000)}</td></tr>
+        <tr><td>总资产</td><td class="${cc(aiReturn)}">${fmt(aiEquity)}</td><td class="${cc(rotReturn)}">${fmt(rotEquity)}</td><td class="${cc(fundReturn)}">${fmt(fundEquity)}</td></tr>
+        <tr><td>收益率</td><td class="${cc(aiReturn)}">${fmtP(aiReturn)}</td><td class="${cc(rotReturn)}">${fmtP(rotReturn)}</td><td class="${cc(fundReturn)}">${fmtP(fundReturn)}</td></tr>
+        <tr><td>风险类型</td><td>方向性风险（多空）</td><td>持币价格风险</td><td style="color:#3fb950">几乎无风险</td></tr>
+        <tr><td>需要API费用</td><td style="color:#f0b429">是（每天约¥1-2）</td><td style="color:#3fb950">否</td><td style="color:#3fb950">否</td></tr>
+        <tr><td>使用杠杆</td><td style="color:#f0b429">5x</td><td style="color:#3fb950">无</td><td style="color:#3fb950">无</td></tr>
       `;
+
+      // ── 折线图 ──
+      updateChart(equityLog, prices, rotAccount, fundAccount, account);
+    }
+
+    let chartInstance = null;
+    function updateChart(equityLog, prices, rotAccount, fundAccount, account) {
+      const canvas = document.getElementById('equity-chart');
+      if (!canvas) return;
+
+      const logs = Array.isArray(equityLog) ? equityLog : [];
+
+      // 如果日志不足2个点，显示提示
+      if (logs.length < 2) {
+        canvas.style.display = 'none';
+        const placeholder = document.getElementById('chart-placeholder');
+        if (placeholder) placeholder.style.display = '';
+        return;
+      }
+      canvas.style.display = '';
+      const placeholder = document.getElementById('chart-placeholder');
+      if (placeholder) placeholder.style.display = 'none';
+
+      const labels  = logs.map(l => ts(l.timestamp));
+      const aiData  = logs.map(l => l.ai   ?? null);
+      const rotData = logs.map(l => l.rotation ?? null);
+      const funData = logs.map(l => l.funding  ?? null);
+
+      if (chartInstance) chartInstance.destroy();
+      chartInstance = new Chart(canvas, {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [
+            { label: '🧠 AI策略', data: aiData,  borderColor: '#58a6ff', backgroundColor: 'rgba(88,166,255,0.08)', tension: 0.3, pointRadius: 2, fill: true },
+            { label: '🔄 轮换策略', data: rotData, borderColor: '#3fb950', backgroundColor: 'rgba(63,185,80,0.08)', tension: 0.3, pointRadius: 2, fill: true },
+            { label: '💰 资金费率', data: funData, borderColor: '#f0b429', backgroundColor: 'rgba(240,180,41,0.08)', tension: 0.3, pointRadius: 2, fill: true },
+          ],
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          interaction: { mode: 'index', intersect: false },
+          plugins: {
+            legend: { labels: { color: '#e6edf3', font: { size: 13 } } },
+            tooltip: {
+              backgroundColor: '#1c2128',
+              borderColor: '#30363d',
+              borderWidth: 1,
+              titleColor: '#8b949e',
+              bodyColor: '#e6edf3',
+              callbacks: { label: ctx => ` ${ctx.dataset.label}: $${(ctx.parsed.y||0).toFixed(2)}` },
+            },
+          },
+          scales: {
+            x: { ticks: { color: '#8b949e', maxTicksLimit: 10 }, grid: { color: '#21262d' } },
+            y: { ticks: { color: '#8b949e', callback: v => '$'+v.toFixed(0) }, grid: { color: '#21262d' } },
+          },
+        },
+      });
     }
 
     refresh();

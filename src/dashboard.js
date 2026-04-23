@@ -54,6 +54,10 @@ function getRotationData() {
   };
 }
 
+function getFundingData() {
+  return readJSON(path.join(__dirname, '..', 'data', 'funding-account.json'));
+}
+
 async function fetchMultiPrices() {
   const coins = ['BTC', 'ETH', 'BNB', 'SOL'];
   const results = await Promise.all(coins.map(coin =>
@@ -77,6 +81,7 @@ async function buildAPIData() {
   const account   = getAccountData();
   const decisions = getTodayDecisions();
   const { account: rotAccount, state: rotState } = getRotationData();
+  const fundingAccount = getFundingData();
   const [currentPrice, spotPrices] = await Promise.all([fetchBTCPrice(), fetchMultiPrices()]);
 
   // --- Claude策略 ---
@@ -130,6 +135,7 @@ async function buildAPIData() {
       totalPnl,
     },
     rotation,
+    funding: fundingAccount,
     updatedAt: new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' }),
   };
 }
