@@ -172,7 +172,7 @@
     async function fetchAllPrices() {
       const coins = ['BTC','ETH','BNB','SOL'];
       const results = await Promise.all(
-        coins.map(c => getJSON(`https://fapi.binance.com/fapi/v1/ticker/price?symbol=${c}USDT`))
+        coins.map(c => getJSON(`https://api.binance.com/api/v3/ticker/price?symbol=${c}USDT`))
       );
       const prices = {};
       results.forEach((r,i) => { if (r?.price) prices[coins[i]] = parseFloat(r.price); });

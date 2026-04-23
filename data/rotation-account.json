@@ -3,5 +3,7 @@
   "coinAmount": 0.1287557962663139,
   "initialUSDT": 10000,
   "tradeHistory": [],
-  "initialized": true
+  "initialized": true,
+  "entryPrice": 77588.74,
+  "entryTime": "2025-04-22T00:00:00.000Z"
 }
