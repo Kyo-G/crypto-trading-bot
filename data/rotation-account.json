@@ -14,5 +14,7 @@
       "timestamp": "2026-04-23T09:50:02.266Z"
     }
   ],
-  "initialized": true
+  "initialized": true,
+  "entryPrice": 2316.48,
+  "entryTime": "2026-04-23T09:50:02.266Z"
 }
