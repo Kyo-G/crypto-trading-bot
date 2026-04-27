@@ -1,13 +1,7 @@
 {
   "initialUSDT": 10000,
-  "currentUSDT": 0,
-  "position": {
-    "btcAmount": 0.1287484304076238,
-    "entryPrice": 77611.09,
-    "entryTime": "2026-04-27T08:35:01.455Z",
-    "fastMAAtEntry": 78266.15285714285,
-    "slowMAAtEntry": 78262.9252
-  },
+  "currentUSDT": 10017.872883035172,
+  "position": null,
   "tradeHistory": [
     {
       "entryPrice": 77632.12,
@@ -17,14 +11,23 @@
       "pnlPercent": -0.08,
       "entryTime": "2026-04-27T08:14:24.853Z",
       "exitTime": "2026-04-27T08:30:02.121Z"
+    },
+    {
+      "entryPrice": 77611.09,
+      "exitPrice": 77809.67,
+      "btcAmount": 0.1287484304076238,
+      "pnl": 25.57,
+      "pnlPercent": 0.26,
+      "entryTime": "2026-04-27T08:35:01.455Z",
+      "exitTime": "2026-04-27T09:00:02.710Z"
     }
   ],
-  "prevFastAboveSlow": true,
+  "prevFastAboveSlow": false,
   "lastMAState": {
-    "price": 77764.02,
-    "fastMA": 78288,
-    "slowMA": 78269.0424,
-    "fastAboveSlow": true,
-    "timestamp": "2026-04-27T08:55:01.963Z"
+    "price": 77809.67,
+    "fastMA": 78105.14,
+    "slowMA": 78261.7384,
+    "fastAboveSlow": false,
+    "timestamp": "2026-04-27T09:00:02.710Z"
   }
 }
