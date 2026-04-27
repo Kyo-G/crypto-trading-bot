@@ -1,6 +1,6 @@
 {
-  "currentCoin": "SOL",
-  "coinAmount": 115.15214551356817,
+  "currentCoin": "BNB",
+  "coinAmount": 15.700279019649324,
   "initialUSDT": 10000,
   "tradeHistory": [
     {
@@ -42,6 +42,16 @@
       "toAmount": 115.15214551356817,
       "usdtValue": 9925.676927100456,
       "timestamp": "2026-04-27T05:30:02.322Z"
+    },
+    {
+      "fromCoin": "SOL",
+      "toCoin": "BNB",
+      "fromPrice": 86.07,
+      "toPrice": 630.01,
+      "fromAmount": 115.15214551356817,
+      "toAmount": 15.700279019649324,
+      "usdtValue": 9901.23401918846,
+      "timestamp": "2026-04-27T05:35:02.285Z"
     }
   ],
   "initialized": true
