@@ -11,10 +11,10 @@
   "tradeHistory": [],
   "prevFastAboveSlow": true,
   "lastMAState": {
-    "price": 77632.12,
-    "fastMA": 78269.15714285713,
-    "slowMA": 78263.76640000001,
+    "price": 77632.09,
+    "fastMA": 78269.15285714285,
+    "slowMA": 78263.76520000001,
     "fastAboveSlow": true,
-    "timestamp": "2026-04-27T08:14:24.853Z"
+    "timestamp": "2026-04-27T08:15:00.700Z"
   }
 }
