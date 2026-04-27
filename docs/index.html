@@ -9,7 +9,6 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body { background: #0d1117; color: #e6edf3; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 14px; }
 
-    /* Header */
     .header { background: #161b22; border-bottom: 1px solid #30363d; padding: 12px 20px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
     .header h1 { font-size: 16px; font-weight: 600; flex: 1; min-width: 160px; }
     .header h1 span { color: #f0b429; }
@@ -22,8 +21,7 @@
 
     .container { max-width: 1100px; margin: 0 auto; padding: 18px; }
 
-    /* 策略概览卡片 */
-    .overview { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; margin-bottom: 20px; }
+    .overview { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 20px; }
     .card { background: #161b22; border: 1px solid #30363d; border-radius: 12px; padding: 18px; }
     .card-label { color: #8b949e; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
     .card-value { font-size: 26px; font-weight: 700; }
@@ -31,17 +29,14 @@
 
     .up { color: #3fb950; } .down { color: #f85149; } .neutral { color: #e6edf3; }
 
-    /* Section */
     .section { background: #161b22; border: 1px solid #30363d; border-radius: 12px; margin-bottom: 16px; overflow: hidden; }
-    .section-title { padding: 12px 18px; border-bottom: 1px solid #30363d; font-size: 12px; font-weight: 600; color: #8b949e; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 8px; }
+    .section-title { padding: 12px 18px; border-bottom: 1px solid #30363d; font-size: 12px; font-weight: 600; color: #8b949e; text-transform: uppercase; letter-spacing: 0.5px; }
     .empty { padding: 28px; text-align: center; color: #8b949e; }
 
-    /* 持仓 */
     .pos-wrap { padding: 18px; }
     .pos-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 8px; }
     .pos-tag { padding: 3px 12px; border-radius: 20px; font-weight: 700; font-size: 12px; letter-spacing: 0.5px; }
     .tag-long  { background: rgba(63,185,80,0.15); color: #3fb950; border: 1px solid #3fb950; }
-    .tag-short { background: rgba(248,81,73,0.15); color: #f85149; border: 1px solid #f85149; }
     .tag-hold  { background: rgba(240,180,41,0.15); color: #f0b429; border: 1px solid #f0b429; }
     .pos-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px,1fr)); gap: 10px; }
     .pos-grid label { display: block; color: #8b949e; font-size: 11px; margin-bottom: 3px; }
@@ -49,7 +44,6 @@
     .pnl-bar { margin-top: 12px; height: 3px; background: #21262d; border-radius: 2px; overflow: hidden; }
     .pnl-fill { height: 100%; border-radius: 2px; }
 
-    /* 表格 */
     table { width: 100%; border-collapse: collapse; }
     th { padding: 9px 14px; text-align: left; color: #8b949e; font-size: 11px; text-transform: uppercase; border-bottom: 1px solid #21262d; }
     td { padding: 9px 14px; border-bottom: 1px solid #21262d; font-size: 12px; }
@@ -58,31 +52,28 @@
     .badge { display: inline-block; padding: 2px 7px; border-radius: 4px; font-size: 11px; font-weight: 600; }
     .b-buy   { background: rgba(63,185,80,0.15); color: #3fb950; }
     .b-sell  { background: rgba(248,81,73,0.15); color: #f85149; }
-    .b-close { background: rgba(240,180,41,0.15); color: #f0b429; }
-    .b-hold  { background: rgba(139,148,158,0.15); color: #8b949e; }
-    .conf-bar { display: inline-block; width: 50px; height: 5px; background: #21262d; border-radius: 3px; vertical-align: middle; margin-left: 5px; overflow: hidden; }
-    .conf-fill { height: 100%; border-radius: 3px; background: #58a6ff; }
 
-    /* 币种颜色 */
     .c-BTC { color: #f7931a; font-weight: 700; }
     .c-ETH { color: #627eea; font-weight: 700; }
     .c-BNB { color: #f3ba2f; font-weight: 700; }
     .c-SOL { color: #9945ff; font-weight: 700; }
 
-    /* 视图切换 */
     .view { display: none; }
     .view.active { display: block; }
+
+    .ma-signal { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 13px; font-weight: 700; }
+    .signal-bull { background: rgba(63,185,80,0.15); color: #3fb950; border: 1px solid #3fb950; }
+    .signal-bear { background: rgba(248,81,73,0.15); color: #f85149; border: 1px solid #f85149; }
   </style>
 </head>
 <body>
   <div class="header">
-    <h1>🤖 <span>模拟交易</span> 仪表盘</h1>
+    <h1>📊 <span>模拟交易</span> 仪表盘</h1>
     <div class="price-badge" id="btc-price">--</div>
     <select id="strategy-select" onchange="switchView(this.value)">
-      <option value="compare">📊 三策略对比</option>
-      <option value="ai">🧠 AI策略详情</option>
+      <option value="compare">📊 两策略对比</option>
       <option value="rotation">🔄 轮换策略详情</option>
-      <option value="funding">💰 资金费率策略详情</option>
+      <option value="ma">📈 均线策略详情</option>
     </select>
     <div class="refresh-note"><span class="dot"></span>30秒刷新</div>
   </div>
@@ -93,68 +84,36 @@
     <div class="view active" id="view-compare">
       <div class="overview">
         <div class="card">
-          <div class="card-label">🧠 AI策略 · 总资产</div>
-          <div class="card-value" id="c-ai-equity">--</div>
-          <div class="card-sub" id="c-ai-return">--</div>
-        </div>
-        <div class="card">
           <div class="card-label">🔄 轮换策略 · 总资产</div>
           <div class="card-value" id="c-rot-equity">--</div>
           <div class="card-sub" id="c-rot-return">--</div>
         </div>
         <div class="card">
-          <div class="card-label">🧠 AI策略 · 胜率</div>
-          <div class="card-value up" id="c-ai-winrate">--</div>
-          <div class="card-sub" id="c-ai-trades">--</div>
+          <div class="card-label">🔄 轮换策略 · 状态</div>
+          <div class="card-value" id="c-rot-coin">--</div>
+          <div class="card-sub" id="c-rot-trades">--</div>
         </div>
         <div class="card">
-          <div class="card-label">🔄 轮换策略 · 换币次数</div>
-          <div class="card-value" id="c-rot-trades">--</div>
-          <div class="card-sub" id="c-rot-coin">--</div>
+          <div class="card-label">📈 均线策略 · 总资产</div>
+          <div class="card-value" id="c-ma-equity">--</div>
+          <div class="card-sub" id="c-ma-return">--</div>
         </div>
         <div class="card">
-          <div class="card-label">💰 资金费率 · 总资产</div>
-          <div class="card-value" id="c-fund-equity">--</div>
-          <div class="card-sub" id="c-fund-return">--</div>
-        </div>
-        <div class="card">
-          <div class="card-label">💰 资金费率 · 累计收益</div>
-          <div class="card-value" id="c-fund-earned">--</div>
-          <div class="card-sub" id="c-fund-status">--</div>
+          <div class="card-label">📈 均线策略 · 状态</div>
+          <div class="card-value" id="c-ma-state">--</div>
+          <div class="card-sub" id="c-ma-trades">--</div>
         </div>
       </div>
       <div class="section">
-        <div class="section-title">📈 实时对比</div>
-        <div style="padding:18px">
-          <table>
-            <thead><tr><th>指标</th><th>🧠 AI策略</th><th>🔄 轮换策略</th><th>💰 资金费率</th></tr></thead>
-            <tbody id="compare-table"></tbody>
-          </table>
-        </div>
-      </div>
-      <div class="section">
-        <div class="section-title">📊 三策略收益曲线</div>
-        <div style="padding:18px;position:relative;height:300px">
+        <div class="section-title">📊 两策略收益曲线（初始均为 $10,000）</div>
+        <div style="padding:18px;position:relative;height:320px">
           <canvas id="equity-chart"></canvas>
           <div id="chart-placeholder" class="empty" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)">数据累积中，运行一段时间后自动显示...</div>
         </div>
       </div>
     </div>
 
-    <!-- AI策略详情视图 -->
-    <div class="view" id="view-ai">
-      <div class="overview">
-        <div class="card"><div class="card-label">总资产</div><div class="card-value" id="ai-equity">--</div><div class="card-sub" id="ai-initial">--</div></div>
-        <div class="card"><div class="card-label">累计收益率</div><div class="card-value" id="ai-return">--</div><div class="card-sub" id="ai-pnl">--</div></div>
-        <div class="card"><div class="card-label">可用保证金</div><div class="card-value" id="ai-available">--</div><div class="card-sub" id="ai-used">--</div></div>
-        <div class="card"><div class="card-label">胜率</div><div class="card-value up" id="ai-winrate">--</div><div class="card-sub" id="ai-trades">--</div></div>
-      </div>
-      <div class="section"><div class="section-title">📌 当前持仓</div><div id="ai-positions"><div class="empty">当前空仓</div></div></div>
-      <div class="section"><div class="section-title">📋 历史交易</div><div id="ai-history"><div class="empty">暂无记录</div></div></div>
-      <div class="section"><div class="section-title">🧠 Claude 今日决策</div><div id="ai-decisions"><div class="empty">暂无记录</div></div></div>
-    </div>
-
-    <!-- 轮换策略详情视图 -->
+    <!-- 轮换策略详情 -->
     <div class="view" id="view-rotation">
       <div class="overview">
         <div class="card"><div class="card-label">总资产</div><div class="card-value" id="rot-equity">--</div><div class="card-sub" id="rot-initial">--</div></div>
@@ -166,16 +125,16 @@
       <div class="section"><div class="section-title">🔀 换币历史</div><div id="rot-history"><div class="empty">暂无换币记录</div></div></div>
     </div>
 
-    <!-- 资金费率策略详情视图 -->
-    <div class="view" id="view-funding">
+    <!-- 均线策略详情 -->
+    <div class="view" id="view-ma">
       <div class="overview">
-        <div class="card"><div class="card-label">总资产</div><div class="card-value" id="fund-equity">--</div><div class="card-sub" id="fund-initial">初始 $10,000</div></div>
-        <div class="card"><div class="card-label">累计收益率</div><div class="card-value" id="fund-return">--</div><div class="card-sub" id="fund-pnl">--</div></div>
-        <div class="card"><div class="card-label">累计资金费收益</div><div class="card-value up" id="fund-earned">--</div><div class="card-sub">每8小时结算</div></div>
-        <div class="card"><div class="card-label">策略状态</div><div class="card-value" id="fund-status">--</div><div class="card-sub">0.01%触发阈值</div></div>
+        <div class="card"><div class="card-label">总资产</div><div class="card-value" id="ma-equity">--</div><div class="card-sub">初始 $10,000</div></div>
+        <div class="card"><div class="card-label">累计收益率</div><div class="card-value" id="ma-return">--</div><div class="card-sub" id="ma-pnl">--</div></div>
+        <div class="card"><div class="card-label">完成交易</div><div class="card-value" id="ma-trade-count">--</div><div class="card-sub">次买卖</div></div>
+        <div class="card"><div class="card-label">均线信号</div><div class="card-value" id="ma-signal">--</div><div class="card-sub" id="ma-ma-values">MA7 vs MA25</div></div>
       </div>
-      <div class="section"><div class="section-title">📌 当前持仓（现货+期货对冲）</div><div id="fund-position"><div class="empty">加载中...</div></div></div>
-      <div class="section"><div class="section-title">📋 操作历史</div><div id="fund-history"><div class="empty">暂无记录</div></div></div>
+      <div class="section"><div class="section-title">📌 当前持仓</div><div id="ma-position"><div class="empty">加载中...</div></div></div>
+      <div class="section"><div class="section-title">📋 交易历史</div><div id="ma-history"><div class="empty">暂无交易记录</div></div></div>
     </div>
 
   </div>
@@ -194,154 +153,60 @@
     const fmtS = n => (+n >= 0 ? '+$' : '-$') + Math.abs(+n).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     const fmtP = n => (+n >= 0 ? '+' : '') + (+n).toFixed(2) + '%';
     const cc   = n => +n > 0 ? 'up' : +n < 0 ? 'down' : 'neutral';
-    const ts   = iso => iso ? new Date(iso).toLocaleString('zh-CN',{timeZone:'Asia/Shanghai',hour12:false,month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}) : '-';
+    const ts   = iso => iso ? new Date(iso).toLocaleString('zh-CN', {timeZone:'Asia/Shanghai',hour12:false,month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}) : '-';
 
     async function getJSON(url) {
-      try { const r = await fetch(url+'?t='+Date.now()); return r.ok ? r.json() : null; } catch { return null; }
+      try { const r = await fetch(url + '?t=' + Date.now()); return r.ok ? r.json() : null; } catch { return null; }
     }
 
-    async function fetchAllPrices() {
-      const coins = ['BTC','ETH','BNB','SOL'];
+    async function fetchPrices() {
+      const coins = ['BTC', 'ETH', 'BNB', 'SOL'];
       const results = await Promise.all(
-        coins.map(c =>
-          fetch(`https://api.binance.com/api/v3/ticker/price?symbol=${c}USDT`)
-            .then(r => r.ok ? r.json() : null).catch(() => null)
-        )
+        coins.map(c => fetch(`https://api.binance.com/api/v3/ticker/price?symbol=${c}USDT`).then(r => r.ok ? r.json() : null).catch(() => null))
       );
       const prices = {};
-      results.forEach((r,i) => { if (r?.price) prices[coins[i]] = parseFloat(r.price); });
+      results.forEach((r, i) => { if (r?.price) prices[coins[i]] = parseFloat(r.price); });
       return prices;
     }
 
     async function refresh() {
-      const today = new Date().toISOString().split('T')[0];
-      const [account, rotAccount, fundAccount, decisions, equityLog, prices] = await Promise.all([
-        getJSON(`${BASE}/data/paper-account.json`),
+      const [rotAccount, maAccount, equityLog, prices] = await Promise.all([
         getJSON(`${BASE}/data/rotation-account.json`),
-        getJSON(`${BASE}/data/funding-account.json`),
-        getJSON(`${BASE}/logs/decisions-${today}.json`),
+        getJSON(`${BASE}/data/ma-account.json`),
         getJSON(`${BASE}/data/equity-log.json`),
-        fetchAllPrices(),
+        fetchPrices(),
       ]);
 
-      const btcPrice = prices.BTC || null;
+      const btcPrice = prices.BTC || 0;
       if (btcPrice) document.getElementById('btc-price').textContent = fmt(btcPrice);
 
-      // ── AI策略数据 ──
-      let aiEquity = 10000, aiReturn = 0, aiPnl = 0, aiTrades = 0, aiWins = 0;
-      if (account) {
-        const positions = (account.positions||[]).map(p => {
-          const price = btcPrice || p.entryPrice;
-          const pnl = p.side==='long' ? (price-p.entryPrice)*p.contracts : (p.entryPrice-price)*p.contracts;
-          return {...p, unrealizedPnl: pnl, percentage: pnl/p.margin*100};
-        });
-        const unreal = positions.reduce((s,p)=>s+p.unrealizedPnl, 0);
-        aiEquity  = account.balance.USDT + account.balance.used + unreal;
-        aiReturn  = (aiEquity - account.initialBalance) / account.initialBalance * 100;
-        aiPnl     = (account.tradeHistory||[]).reduce((s,t)=>s+t.pnl, 0);
-        aiTrades  = (account.tradeHistory||[]).length;
-        aiWins    = (account.tradeHistory||[]).filter(t=>t.pnl>0).length;
-        const hist = (account.tradeHistory||[]).slice(-20).reverse();
-
-        // 对比视图
-        document.getElementById('c-ai-equity').innerHTML = `<span class="${cc(aiReturn)}">${fmt(aiEquity)}</span>`;
-        document.getElementById('c-ai-return').innerHTML = `<span class="${cc(aiReturn)}">${fmtP(aiReturn)}</span> · 盈亏 <span class="${cc(aiPnl)}">${fmtS(aiPnl)}</span>`;
-        document.getElementById('c-ai-winrate').textContent = aiTrades > 0 ? (aiWins/aiTrades*100).toFixed(1)+'%' : '-%';
-        document.getElementById('c-ai-trades').textContent = `共${aiTrades}笔 胜${aiWins}负${aiTrades-aiWins}`;
-
-        // AI详情视图
-        document.getElementById('ai-equity').innerHTML    = `<span class="${cc(aiReturn)}">${fmt(aiEquity)}</span>`;
-        document.getElementById('ai-initial').textContent = `初始 ${fmt(account.initialBalance)}`;
-        document.getElementById('ai-return').innerHTML    = `<span class="${cc(aiReturn)}">${fmtP(aiReturn)}</span>`;
-        document.getElementById('ai-pnl').innerHTML       = `盈亏 <span class="${cc(aiPnl)}">${fmtS(aiPnl)}</span>`;
-        document.getElementById('ai-available').textContent = fmt(account.balance.USDT);
-        document.getElementById('ai-used').textContent    = `占用 ${fmt(account.balance.used)}`;
-        document.getElementById('ai-winrate').textContent = aiTrades > 0 ? (aiWins/aiTrades*100).toFixed(1)+'%' : '-%';
-        document.getElementById('ai-trades').textContent  = `共${aiTrades}笔 胜${aiWins}负${aiTrades-aiWins}`;
-
-        // 持仓
-        const posEl = document.getElementById('ai-positions');
-        posEl.innerHTML = positions.length===0 ? '<div class="empty">当前空仓</div>' :
-          positions.map(p => {
-            const pct = Math.min(Math.abs(p.percentage),100);
-            const bc  = p.unrealizedPnl>=0 ? '#3fb950' : '#f85149';
-            return `<div class="pos-wrap">
-              <div class="pos-top">
-                <span class="pos-tag ${p.side==='long'?'tag-long':'tag-short'}">${p.side==='long'?'做多 LONG':'做空 SHORT'}</span>
-                <span class="${cc(p.unrealizedPnl)}" style="font-size:18px;font-weight:700">${fmtS(p.unrealizedPnl)} <small>(${fmtP(p.percentage)})</small></span>
-              </div>
-              <div class="pos-grid">
-                <div><label>数量</label><span>${p.contracts.toFixed(4)} BTC</span></div>
-                <div><label>开仓价</label><span>${fmt(p.entryPrice)}</span></div>
-                <div><label>当前价</label><span>${btcPrice?fmt(btcPrice):'-'}</span></div>
-                <div><label>爆仓价</label><span style="color:#f0b429">${fmt(p.liquidationPrice)}</span></div>
-                <div><label>保证金</label><span>${fmt(p.margin)}</span></div>
-                <div><label>杠杆</label><span>${p.leverage}x</span></div>
-              </div>
-              <div class="pnl-bar"><div class="pnl-fill" style="width:${pct}%;background:${bc}"></div></div>
-            </div>`;
-          }).join('');
-
-        // 历史
-        const bm = {buy:'b-buy',sell:'b-sell',close:'b-close',hold:'b-hold'};
-        const lm = {buy:'开多',sell:'开空','close-long':'平多','close-short':'平空'};
-        document.getElementById('ai-history').innerHTML = hist.length===0 ? '<div class="empty">暂无记录</div>' :
-          `<table><thead><tr><th>时间</th><th>方向</th><th>开仓价</th><th>平仓价</th><th>数量</th><th>盈亏</th><th>收益率</th></tr></thead><tbody>`+
-          hist.map(t=>{
-            const isClose=t.side?.startsWith('close');
-            const isLong=t.side==='buy'||t.side==='long'||t.side==='close-long';
-            return `<tr><td>${ts(t.openedAt||t.closedAt)}</td>
-              <td><span class="badge ${isClose?'b-close':isLong?'b-buy':'b-sell'}">${isClose?(t.side.includes('long')?'平多':'平空'):(isLong?'开多':'开空')}</span></td>
-              <td>${t.entryPrice?fmt(t.entryPrice):'-'}</td><td>${t.closePrice?fmt(t.closePrice):'-'}</td>
-              <td>${(t.contracts||0).toFixed(4)} BTC</td>
-              <td class="${cc(t.pnl)}">${fmtS(t.pnl)}</td>
-              <td class="${cc(t.pnlPercent)}">${fmtP(t.pnlPercent)}</td></tr>`;
-          }).join('')+`</tbody></table>`;
-
-        // Claude决策
-        const decList = (decisions||[]).slice(-10).reverse();
-        document.getElementById('ai-decisions').innerHTML = decList.length===0 ? '<div class="empty">今日暂无决策</div>' :
-          `<table><thead><tr><th>时间</th><th>决策</th><th>信心</th><th>BTC价</th><th>RSI</th><th>理由</th></tr></thead><tbody>`+
-          decList.map(d=>{
-            const a=d.decision?.action||'hold'; const c=d.decision?.confidence||0;
-            const bm2={buy:'b-buy',sell:'b-sell',close:'b-close',hold:'b-hold'};
-            const lm2={buy:'开多',sell:'开空',close:'平仓',hold:'观望'};
-            return `<tr><td>${ts(d.timestamp)}</td>
-              <td><span class="badge ${bm2[a]||'b-hold'}">${lm2[a]||a}</span></td>
-              <td>${c}/10 <span class="conf-bar"><span class="conf-fill" style="width:${c*10}%"></span></span></td>
-              <td>${d.price?fmt(d.price):'-'}</td><td>${d.rsi||'-'}</td>
-              <td style="color:#8b949e;max-width:240px">${d.decision?.reasoning||''}</td></tr>`;
-          }).join('')+`</tbody></table>`;
-      }
-
-      // ── 轮换策略数据 ──
+      // ── 轮换策略 ──
       let rotEquity = 10000, rotReturn = 0;
       if (rotAccount?.initialized) {
         const cur      = rotAccount.currentCoin;
         const curPrice = prices[cur] || 0;
         rotEquity  = rotAccount.coinAmount * curPrice;
         rotReturn  = (rotEquity - rotAccount.initialUSDT) / rotAccount.initialUSDT * 100;
-        const rotHist  = (rotAccount.tradeHistory||[]).slice(-20).reverse();
+        const rotHist  = (rotAccount.tradeHistory || []).slice(-20).reverse();
         const rotCount = rotAccount.tradeHistory?.length || 0;
 
         // 对比视图
-        document.getElementById('c-rot-equity').innerHTML  = `<span class="${cc(rotReturn)}">${fmt(rotEquity)}</span>`;
-        document.getElementById('c-rot-return').innerHTML  = `<span class="${cc(rotReturn)}">${fmtP(rotReturn)}</span>`;
-        document.getElementById('c-rot-trades').textContent = rotCount + ' 次';
-        document.getElementById('c-rot-coin').innerHTML    = `当前持有 <span class="c-${cur}">${cur}</span>`;
+        document.getElementById('c-rot-equity').innerHTML = `<span class="${cc(rotReturn)}">${fmt(rotEquity)}</span>`;
+        document.getElementById('c-rot-return').innerHTML = `<span class="${cc(rotReturn)}">${fmtP(rotReturn)}</span> · 盈亏 <span class="${cc(rotEquity - rotAccount.initialUSDT)}">${fmtS(rotEquity - rotAccount.initialUSDT)}</span>`;
+        document.getElementById('c-rot-coin').innerHTML   = `<span class="c-${cur}">${cur}</span>`;
+        document.getElementById('c-rot-trades').textContent = `已换币 ${rotCount} 次`;
 
         // 轮换详情视图
-        document.getElementById('rot-equity').innerHTML   = `<span class="${cc(rotReturn)}">${fmt(rotEquity)}</span>`;
+        document.getElementById('rot-equity').innerHTML    = `<span class="${cc(rotReturn)}">${fmt(rotEquity)}</span>`;
         document.getElementById('rot-initial').textContent = `初始 ${fmt(rotAccount.initialUSDT)}`;
-        document.getElementById('rot-return').innerHTML   = `<span class="${cc(rotReturn)}">${fmtP(rotReturn)}</span>`;
-        document.getElementById('rot-pnl').innerHTML      = `盈亏 <span class="${cc(rotEquity-rotAccount.initialUSDT)}">${fmtS(rotEquity-rotAccount.initialUSDT)}</span>`;
-        document.getElementById('rot-count').textContent  = rotCount + ' 次';
+        document.getElementById('rot-return').innerHTML    = `<span class="${cc(rotReturn)}">${fmtP(rotReturn)}</span>`;
+        document.getElementById('rot-pnl').innerHTML       = `盈亏 <span class="${cc(rotEquity - rotAccount.initialUSDT)}">${fmtS(rotEquity - rotAccount.initialUSDT)}</span>`;
+        document.getElementById('rot-count').textContent   = rotCount + ' 次';
         document.getElementById('rot-holding-coin').innerHTML = `<span class="c-${cur}">${cur}</span>`;
         document.getElementById('rot-holding-val').textContent = `${rotAccount.coinAmount.toFixed(4)} ${cur} ≈ ${fmt(rotEquity)}`;
 
-        // 当前持仓详情
         const entryPrice = rotAccount.entryPrice || 0;
-        const pnlSinceEntry = entryPrice > 0 ? (curPrice - entryPrice) / entryPrice * 100 : 0;
+        const pnlSinceEntry = entryPrice > 0 ? (prices[cur] - entryPrice) / entryPrice * 100 : 0;
         document.getElementById('rot-position').innerHTML = `<div class="pos-wrap">
           <div class="pos-top">
             <span class="pos-tag tag-hold">持有 <span class="c-${cur}">${cur}</span></span>
@@ -350,7 +215,7 @@
           <div class="pos-grid">
             <div><label>持有数量</label><span>${rotAccount.coinAmount.toFixed(4)} ${cur}</span></div>
             <div><label>买入价格</label><span>${entryPrice ? fmt(entryPrice) : '-'}</span></div>
-            <div><label>当前价格</label><span class="c-${cur}">${curPrice ? fmt(curPrice) : '-'}</span></div>
+            <div><label>当前价格</label><span class="c-${cur}">${prices[cur] ? fmt(prices[cur]) : '-'}</span></div>
             <div><label>当前价值</label><span>${fmt(rotEquity)}</span></div>
             <div><label>买入时间</label><span style="font-size:12px">${ts(rotAccount.entryTime)}</span></div>
             <div><label>总收益率</label><span class="${cc(rotReturn)}">${fmtP(rotReturn)}</span></div>
@@ -358,115 +223,106 @@
           <div class="pnl-bar"><div class="pnl-fill" style="width:${Math.min(Math.abs(pnlSinceEntry),100)}%;background:${pnlSinceEntry>=0?'#3fb950':'#f85149'}"></div></div>
         </div>`;
 
-        // 换币历史
-        document.getElementById('rot-history').innerHTML = rotHist.length===0 ? '<div class="empty">暂无换币记录（等待切换机会）</div>' :
-          `<table><thead><tr><th>时间</th><th>换出</th><th>换入</th><th>换出价</th><th>换入价</th><th>USDT价值</th></tr></thead><tbody>`+
-          rotHist.map(t=>`<tr>
+        document.getElementById('rot-history').innerHTML = rotHist.length === 0
+          ? '<div class="empty">暂无换币记录</div>'
+          : `<table><thead><tr><th>时间</th><th>换出</th><th>换入</th><th>换出价</th><th>换入价</th><th>USDT价值</th></tr></thead><tbody>`
+          + rotHist.map(t => `<tr>
             <td>${ts(t.timestamp)}</td>
             <td><span class="c-${t.fromCoin}">${t.fromCoin}</span> ${t.fromAmount.toFixed(4)}</td>
             <td><span class="c-${t.toCoin}">${t.toCoin}</span> ${t.toAmount.toFixed(4)}</td>
             <td>${fmt(t.fromPrice)}</td>
             <td>${fmt(t.toPrice)}</td>
             <td>${fmt(t.usdtValue)}</td>
-          </tr>`).join('')+`</tbody></table>`;
-      } else {
-        ['c-rot-equity','c-rot-return','rot-equity','rot-return'].forEach(id => {
-          const el = document.getElementById(id);
-          if (el) el.textContent = '初始化中...';
-        });
+          </tr>`).join('') + `</tbody></table>`;
       }
 
-      // ── 资金费率策略数据 ──
-      let fundEquity = 10000, fundReturn = 0;
-      if (fundAccount) {
-        fundEquity = fundAccount.currentUSDT || 10000;
-        fundReturn = (fundEquity - fundAccount.initialUSDT) / fundAccount.initialUSDT * 100;
-        const earned = fundAccount.totalFundingEarned || 0;
-        const pos    = fundAccount.position;
-        const status = pos ? `做${pos.openingRate >= 0 ? '空' : '多'}期货对冲中` : '空仓等待机会';
+      // ── 均线策略 ──
+      let maEquity = 10000, maReturn = 0;
+      if (maAccount) {
+        const pos = maAccount.position;
+        maEquity  = pos ? pos.btcAmount * btcPrice : (maAccount.currentUSDT || 10000);
+        maReturn  = (maEquity - maAccount.initialUSDT) / maAccount.initialUSDT * 100;
+        const trades    = maAccount.tradeHistory || [];
+        const maState   = maAccount.lastMAState;
+        const bull      = maState?.fastAboveSlow;
+        const signalTxt = bull === undefined ? '--' : (bull ? '多头排列📈' : '空头排列📉');
+        const maValTxt  = maState ? `MA7 $${(+maState.fastMA).toFixed(0)} | MA25 $${(+maState.slowMA).toFixed(0)}` : 'MA7 vs MA25';
+        const stateTxt  = pos ? `持仓中 BTC` : `空仓等待`;
 
-        document.getElementById('c-fund-equity').innerHTML  = `<span class="${cc(fundReturn)}">${fmt(fundEquity)}</span>`;
-        document.getElementById('c-fund-return').innerHTML  = `<span class="${cc(fundReturn)}">${fmtP(fundReturn)}</span>`;
-        document.getElementById('c-fund-earned').innerHTML  = `<span class="${cc(earned)}">+$${Math.abs(earned).toFixed(4)}</span>`;
-        document.getElementById('c-fund-status').textContent = status;
+        // 对比视图
+        document.getElementById('c-ma-equity').innerHTML = `<span class="${cc(maReturn)}">${fmt(maEquity)}</span>`;
+        document.getElementById('c-ma-return').innerHTML = `<span class="${cc(maReturn)}">${fmtP(maReturn)}</span> · 盈亏 <span class="${cc(maEquity - maAccount.initialUSDT)}">${fmtS(maEquity - maAccount.initialUSDT)}</span>`;
+        document.getElementById('c-ma-state').textContent  = stateTxt;
+        document.getElementById('c-ma-trades').textContent = `已交易 ${trades.length} 次`;
 
-        document.getElementById('fund-equity').innerHTML   = `<span class="${cc(fundReturn)}">${fmt(fundEquity)}</span>`;
-        document.getElementById('fund-return').innerHTML   = `<span class="${cc(fundReturn)}">${fmtP(fundReturn)}</span>`;
-        document.getElementById('fund-pnl').innerHTML      = `盈亏 <span class="${cc(earned)}">+$${Math.abs(earned).toFixed(4)}</span>`;
-        document.getElementById('fund-earned').textContent = `+$${earned.toFixed(4)}`;
-        document.getElementById('fund-status').textContent = status;
+        // 均线详情视图
+        document.getElementById('ma-equity').innerHTML     = `<span class="${cc(maReturn)}">${fmt(maEquity)}</span>`;
+        document.getElementById('ma-return').innerHTML     = `<span class="${cc(maReturn)}">${fmtP(maReturn)}</span>`;
+        document.getElementById('ma-pnl').innerHTML        = `盈亏 <span class="${cc(maEquity - maAccount.initialUSDT)}">${fmtS(maEquity - maAccount.initialUSDT)}</span>`;
+        document.getElementById('ma-trade-count').textContent = trades.length;
+        document.getElementById('ma-signal').innerHTML     = `<span class="ma-signal ${bull === undefined ? '' : (bull ? 'signal-bull' : 'signal-bear')}">${signalTxt}</span>`;
+        document.getElementById('ma-ma-values').textContent = maValTxt;
 
-        // 当前持仓
-        document.getElementById('fund-position').innerHTML = pos ? `<div class="pos-wrap">
-          <div class="pos-top">
-            <span class="pos-tag tag-hold">Delta中性对冲 · BTC</span>
-            <span class="up" style="font-size:18px;font-weight:700">+$${earned.toFixed(4)} 已收取</span>
-          </div>
-          <div class="pos-grid">
-            <div><label>现货持有</label><span>${pos.spotAmount.toFixed(4)} BTC</span></div>
-            <div><label>期货方向</label><span>${pos.openingRate >= 0 ? '做空（收资金费）' : '做多（收资金费）'}</span></div>
-            <div><label>开仓价格</label><span>${fmt(pos.entryPrice)}</span></div>
-            <div><label>占用资金</label><span>${fmt(pos.margin)}</span></div>
-            <div><label>开仓费率</label><span>${pos.openingRate >= 0 ? '+' : ''}${(pos.openingRate*100).toFixed(4)}%</span></div>
-            <div><label>开仓时间</label><span style="font-size:12px">${ts(pos.openedAt)}</span></div>
-          </div>
-        </div>` : '<div class="empty">当前无持仓，等待资金费率超过 0.01%</div>';
+        // 持仓
+        if (pos) {
+          const unreal    = (btcPrice - pos.entryPrice) * pos.btcAmount;
+          const unrealPct = (unreal / (pos.entryPrice * pos.btcAmount)) * 100;
+          document.getElementById('ma-position').innerHTML = `<div class="pos-wrap">
+            <div class="pos-top">
+              <span class="pos-tag tag-long">持有 BTC</span>
+              <span class="${cc(unreal)}" style="font-size:18px;font-weight:700">${fmtS(unreal)} <small>(${fmtP(unrealPct)})</small></span>
+            </div>
+            <div class="pos-grid">
+              <div><label>持有数量</label><span>${pos.btcAmount.toFixed(4)} BTC</span></div>
+              <div><label>买入价格</label><span>${fmt(pos.entryPrice)}</span></div>
+              <div><label>当前价格</label><span class="c-BTC">${fmt(btcPrice)}</span></div>
+              <div><label>当前价值</label><span>${fmt(maEquity)}</span></div>
+              <div><label>买入时间</label><span style="font-size:12px">${ts(pos.entryTime)}</span></div>
+              <div><label>总收益率</label><span class="${cc(maReturn)}">${fmtP(maReturn)}</span></div>
+            </div>
+            <div class="pnl-bar"><div class="pnl-fill" style="width:${Math.min(Math.abs(unrealPct),100)}%;background:${unreal>=0?'#3fb950':'#f85149'}"></div></div>
+          </div>`;
+        } else {
+          document.getElementById('ma-position').innerHTML = `<div class="empty">空仓中，等待均线金叉信号（MA7 上穿 MA25）</div>`;
+        }
 
-        // 历史记录
-        const hist = (fundAccount.history || []).slice(-30).reverse();
-        document.getElementById('fund-history').innerHTML = hist.length === 0
-          ? '<div class="empty">暂无记录</div>'
-          : `<table><thead><tr><th>时间</th><th>类型</th><th>详情</th><th>金额</th></tr></thead><tbody>`
-          + hist.map(h => {
-              const typeMap = { open:'📥 开仓', close:'📤 平仓', funding:'💵 资金费' };
-              const detail  = h.type === 'funding'
-                ? `费率 ${h.rate >= 0 ? '+' : ''}${(h.rate*100).toFixed(4)}%`
-                : h.type === 'open'
-                ? `BTC @ ${fmt(h.markPrice)}`
-                : `净P&L ≈ ${fmt(h.netPnl||0)}`;
-              const amt     = h.type === 'funding' ? `<span class="${cc(h.earned)}">+$${Math.abs(h.earned||0).toFixed(4)}</span>`
-                            : h.type === 'open'   ? `动用 ${fmt(h.capital)}`
-                            : '-';
-              return `<tr><td>${ts(h.timestamp)}</td><td>${typeMap[h.type]||h.type}</td><td>${detail}</td><td>${amt}</td></tr>`;
-            }).join('')
-          + `</tbody></table>`;
+        // 交易历史
+        const hist = trades.slice(-20).reverse();
+        document.getElementById('ma-history').innerHTML = hist.length === 0
+          ? '<div class="empty">暂无交易记录</div>'
+          : `<table><thead><tr><th>买入时间</th><th>卖出时间</th><th>买入价</th><th>卖出价</th><th>BTC数量</th><th>盈亏</th><th>收益率</th></tr></thead><tbody>`
+          + hist.map(t => `<tr>
+            <td>${ts(t.entryTime)}</td>
+            <td>${ts(t.exitTime)}</td>
+            <td>${fmt(t.entryPrice)}</td>
+            <td>${fmt(t.exitPrice)}</td>
+            <td>${t.btcAmount.toFixed(4)}</td>
+            <td class="${cc(t.pnl)}">${fmtS(t.pnl)}</td>
+            <td class="${cc(t.pnlPercent)}">${fmtP(t.pnlPercent)}</td>
+          </tr>`).join('') + `</tbody></table>`;
       }
-
-      // 对比表格
-      document.getElementById('compare-table').innerHTML = `
-        <tr><td>总资产</td><td class="${cc(aiReturn)}">${fmt(aiEquity)}</td><td class="${cc(rotReturn)}">${fmt(rotEquity)}</td><td class="${cc(fundReturn)}">${fmt(fundEquity)}</td></tr>
-        <tr><td>收益率</td><td class="${cc(aiReturn)}">${fmtP(aiReturn)}</td><td class="${cc(rotReturn)}">${fmtP(rotReturn)}</td><td class="${cc(fundReturn)}">${fmtP(fundReturn)}</td></tr>
-        <tr><td>风险类型</td><td>方向性风险（多空）</td><td>持币价格风险</td><td style="color:#3fb950">几乎无风险</td></tr>
-        <tr><td>需要API费用</td><td style="color:#f0b429">是（每天约¥1-2）</td><td style="color:#3fb950">否</td><td style="color:#3fb950">否</td></tr>
-        <tr><td>使用杠杆</td><td style="color:#f0b429">5x</td><td style="color:#3fb950">无</td><td style="color:#3fb950">无</td></tr>
-      `;
 
       // ── 折线图 ──
-      updateChart(equityLog, prices, rotAccount, fundAccount, account);
+      updateChart(equityLog);
     }
 
     let chartInstance = null;
-    function updateChart(equityLog, prices, rotAccount, fundAccount, account) {
+    function updateChart(equityLog) {
       const canvas = document.getElementById('equity-chart');
       if (!canvas) return;
+      const logs = Array.isArray(equityLog) ? equityLog.filter(l => l.ma !== undefined) : [];
 
-      const logs = Array.isArray(equityLog) ? equityLog : [];
-
-      // 如果日志不足2个点，显示提示
       if (logs.length < 2) {
         canvas.style.display = 'none';
-        const placeholder = document.getElementById('chart-placeholder');
-        if (placeholder) placeholder.style.display = '';
+        document.getElementById('chart-placeholder').style.display = '';
         return;
       }
       canvas.style.display = '';
-      const placeholder = document.getElementById('chart-placeholder');
-      if (placeholder) placeholder.style.display = 'none';
+      document.getElementById('chart-placeholder').style.display = 'none';
 
       const labels  = logs.map(l => ts(l.timestamp));
-      const aiData  = logs.map(l => l.ai   ?? null);
       const rotData = logs.map(l => l.rotation ?? null);
-      const funData = logs.map(l => l.funding  ?? null);
+      const maData  = logs.map(l => l.ma ?? null);
 
       if (chartInstance) chartInstance.destroy();
       chartInstance = new Chart(canvas, {
@@ -474,9 +330,8 @@
         data: {
           labels,
           datasets: [
-            { label: '🧠 AI策略', data: aiData,  borderColor: '#58a6ff', backgroundColor: 'rgba(88,166,255,0.08)', tension: 0.3, pointRadius: 2, fill: true },
-            { label: '🔄 轮换策略', data: rotData, borderColor: '#3fb950', backgroundColor: 'rgba(63,185,80,0.08)', tension: 0.3, pointRadius: 2, fill: true },
-            { label: '💰 资金费率', data: funData, borderColor: '#f0b429', backgroundColor: 'rgba(240,180,41,0.08)', tension: 0.3, pointRadius: 2, fill: true },
+            { label: '🔄 轮换策略', data: rotData, borderColor: '#3fb950', backgroundColor: 'rgba(63,185,80,0.08)', tension: 0.3, pointRadius: 1, fill: true },
+            { label: '📈 均线策略', data: maData,  borderColor: '#58a6ff', backgroundColor: 'rgba(88,166,255,0.08)', tension: 0.3, pointRadius: 1, fill: true },
           ],
         },
         options: {
@@ -485,17 +340,14 @@
           plugins: {
             legend: { labels: { color: '#e6edf3', font: { size: 13 } } },
             tooltip: {
-              backgroundColor: '#1c2128',
-              borderColor: '#30363d',
-              borderWidth: 1,
-              titleColor: '#8b949e',
-              bodyColor: '#e6edf3',
-              callbacks: { label: ctx => ` ${ctx.dataset.label}: $${(ctx.parsed.y||0).toFixed(2)}` },
+              backgroundColor: '#1c2128', borderColor: '#30363d', borderWidth: 1,
+              titleColor: '#8b949e', bodyColor: '#e6edf3',
+              callbacks: { label: ctx => ` ${ctx.dataset.label}: $${(ctx.parsed.y || 0).toFixed(2)}` },
             },
           },
           scales: {
             x: { ticks: { color: '#8b949e', maxTicksLimit: 10 }, grid: { color: '#21262d' } },
-            y: { ticks: { color: '#8b949e', callback: v => '$'+v.toFixed(0) }, grid: { color: '#21262d' } },
+            y: { ticks: { color: '#8b949e', callback: v => '$' + v.toFixed(0) }, grid: { color: '#21262d' } },
           },
         },
       });
