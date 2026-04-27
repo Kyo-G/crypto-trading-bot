@@ -24,10 +24,10 @@
   ],
   "prevFastAboveSlow": false,
   "lastMAState": {
-    "price": 77809.67,
-    "fastMA": 78105.14,
-    "slowMA": 78261.7384,
+    "price": 77832.41,
+    "fastMA": 78108.38857142857,
+    "slowMA": 78262.648,
     "fastAboveSlow": false,
-    "timestamp": "2026-04-27T09:00:02.710Z"
+    "timestamp": "2026-04-27T09:05:02.160Z"
   }
 }
