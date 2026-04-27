@@ -1,0 +1,20 @@
+{
+  "initialUSDT": 10000,
+  "currentUSDT": 0,
+  "position": {
+    "btcAmount": 0.12881266156328078,
+    "entryPrice": 77632.12,
+    "entryTime": "2026-04-27T08:14:24.853Z",
+    "fastMAAtEntry": 78269.15714285713,
+    "slowMAAtEntry": 78263.76640000001
+  },
+  "tradeHistory": [],
+  "prevFastAboveSlow": true,
+  "lastMAState": {
+    "price": 77632.12,
+    "fastMA": 78269.15714285713,
+    "slowMA": 78263.76640000001,
+    "fastAboveSlow": true,
+    "timestamp": "2026-04-27T08:14:24.853Z"
+  }
+}
