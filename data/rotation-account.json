@@ -1,6 +1,6 @@
 {
-  "currentCoin": "ETH",
-  "coinAmount": 4.2578520234328545,
+  "currentCoin": "SOL",
+  "coinAmount": 115.15214551356817,
   "initialUSDT": 10000,
   "tradeHistory": [
     {
@@ -32,9 +32,17 @@
       "toAmount": 4.2578520234328545,
       "usdtValue": 9954.167568295727,
       "timestamp": "2026-04-27T05:25:02.580Z"
+    },
+    {
+      "fromCoin": "ETH",
+      "toCoin": "SOL",
+      "fromPrice": 2333.48,
+      "toPrice": 86.11,
+      "fromAmount": 4.2578520234328545,
+      "toAmount": 115.15214551356817,
+      "usdtValue": 9925.676927100456,
+      "timestamp": "2026-04-27T05:30:02.322Z"
     }
   ],
-  "initialized": true,
-  "entryPrice": 2335.5,
-  "entryTime": "2026-04-27T05:25:02.580Z"
+  "initialized": true
 }
