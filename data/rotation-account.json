@@ -1,6 +1,6 @@
 {
-  "currentCoin": "ETH",
-  "coinAmount": 4.27560135618351,
+  "currentCoin": "BNB",
+  "coinAmount": 15.770612398538173,
   "initialUSDT": 10000,
   "tradeHistory": [
     {
@@ -62,9 +62,19 @@
       "toAmount": 4.27560135618351,
       "usdtValue": 9709.852160961615,
       "timestamp": "2026-04-27T15:25:01.379Z"
+    },
+    {
+      "fromCoin": "ETH",
+      "toCoin": "BNB",
+      "fromPrice": 2314.78,
+      "toPrice": 626.31,
+      "fromAmount": 4.27560135618351,
+      "toAmount": 15.770612398538173,
+      "usdtValue": 9887.1794307592,
+      "timestamp": "2026-04-29T03:45:01.315Z"
     }
   ],
   "initialized": true,
-  "entryPrice": 2268.72,
-  "entryTime": "2026-04-27T15:25:01.379Z"
+  "entryPrice": 626.31,
+  "entryTime": "2026-04-29T03:45:01.315Z"
 }
