@@ -1,6 +1,6 @@
 {
-  "currentCoin": "BTC",
-  "coinAmount": 0.1279670017544859,
+  "currentCoin": "ETH",
+  "coinAmount": 4.290825016157364,
   "initialUSDT": 10000,
   "tradeHistory": [
     {
@@ -82,9 +82,19 @@
       "toAmount": 0.1279670017544859,
       "usdtValue": 9864.894184391333,
       "timestamp": "2026-04-29T03:50:01.213Z"
+    },
+    {
+      "fromCoin": "BTC",
+      "toCoin": "ETH",
+      "fromPrice": 75005.58,
+      "toPrice": 2232.45,
+      "fromAmount": 0.1279670017544859,
+      "toAmount": 4.290825016157364,
+      "usdtValue": 9588.640948268776,
+      "timestamp": "2026-04-29T18:10:01.962Z"
     }
   ],
   "initialized": true,
-  "entryPrice": 77012.27,
-  "entryTime": "2026-04-29T03:50:01.213Z"
+  "entryPrice": 2232.45,
+  "entryTime": "2026-04-29T18:10:01.962Z"
 }
